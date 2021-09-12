@@ -1,5 +1,12 @@
+
+require('dotenv').config()
 const express = require('express')
+const cors = require('cors')
+const mongoose = require('mongoose')
+const Product = require('./models/product')
+
 const app = express()
+app.use(cors())
 
 let notes = [
   {
@@ -43,7 +50,13 @@ app.delete('/api/notes/:id', (request, response) => {
 
   response.status(204).end()
 })
-const PORT = 3001
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
